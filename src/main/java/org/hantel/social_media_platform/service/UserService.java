@@ -2,7 +2,7 @@ package org.hantel.social_media_platform.service;
 
 import java.util.UUID;
 
-import org.hantel.social_media_platform.document.User;
+import org.hantel.social_media_platform.model.User;
 import org.hantel.social_media_platform.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

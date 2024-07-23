@@ -2,7 +2,7 @@ package org.hantel.social_media_platform.config;
 
 import java.util.UUID;
 
-import org.hantel.social_media_platform.document.UuidIdentifiedDocument;
+import org.hantel.social_media_platform.model.UuidIdentifiedDocument;
 import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventListener;
 import org.springframework.data.mongodb.core.mapping.event.BeforeConvertEvent;
 import org.springframework.stereotype.Component;

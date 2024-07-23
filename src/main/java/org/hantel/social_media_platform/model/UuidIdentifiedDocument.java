@@ -1,13 +1,15 @@
-package org.hantel.social_media_platform.document;
+package org.hantel.social_media_platform.model;
 
 import java.util.UUID;
 
 import org.springframework.data.annotation.Id;
 
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
-public class UuidIdentifiedDocument {
+@ToString
+public abstract class UuidIdentifiedDocument {
     
     @Id
     protected UUID id;
