@@ -1,5 +1,6 @@
 package org.hantel.social_media_platform.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -8,12 +9,14 @@ import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @Document(collection = "users")
 @CompoundIndexes({
@@ -23,9 +26,10 @@ import lombok.ToString;
                    def ="{'lastName': 1, 'firstName': 1}")
 })
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Getter
 @Setter
-@ToString(callSuper=true)
 public class User extends UuidIdentifiedDocument {
     
     @Indexed(direction = IndexDirection.ASCENDING)
@@ -33,16 +37,13 @@ public class User extends UuidIdentifiedDocument {
     private String firstName;
     private String lastName;
     private String email;
-    private List<UUID> following;
-    private List<UUID> followers;
-    private List<Comment> comments;
+    @Builder.Default
+    @DBRef(lazy = true)
+    private List<User> following = new ArrayList<>();
+    @Builder.Default
+    @DBRef(lazy = true)
+    private List<User> followers = new ArrayList<>();
     
     @Transient
     private String password;
-    
-    public User(String username, String firstName, String lastName) {
-        this.username = username;
-        this.firstName = firstName;
-        this.lastName = lastName;
-    }
 }

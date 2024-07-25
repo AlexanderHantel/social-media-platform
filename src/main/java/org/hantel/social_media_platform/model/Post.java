@@ -13,20 +13,24 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Document(collection = "comments")
+@Document(collection = "posts")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Getter
 @Setter
-public class Comment extends UuidIdentifiedDocument {
-    @DBRef
-    private User user;
+public class Post extends UuidIdentifiedDocument {
     private String content;
+    private User user;
     private LocalDateTime createdAt;
-    @DBRef
-    private Post post;
+    @Builder.Default
+    @DBRef(lazy = true)
+    private List<Comment> comments = new ArrayList<>();
     @Builder.Default
     @DBRef(lazy = true)
     private List<Like> likes = new ArrayList<>();
+
+    public void addComment(Comment comment) {
+        comments.add(comment);
+    }
 }

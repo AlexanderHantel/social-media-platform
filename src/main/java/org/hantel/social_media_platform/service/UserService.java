@@ -9,15 +9,19 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class UserService {
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Autowired
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
     
-    public User save(User user) {
+    public User create(User user) {
         return userRepository.insert(user);
+    }
+    
+    public User update(User user) {
+        return userRepository.save(user);
     }
     
     public User findById(UUID id) {

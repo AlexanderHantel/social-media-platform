@@ -4,8 +4,12 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.hantel.social_media_platform.model.Comment;
+import org.hantel.social_media_platform.model.Like;
+import org.hantel.social_media_platform.model.Post;
 import org.hantel.social_media_platform.model.User;
 import org.hantel.social_media_platform.service.CommentService;
+import org.hantel.social_media_platform.service.LikeService;
+import org.hantel.social_media_platform.service.PostService;
 import org.hantel.social_media_platform.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,11 +23,18 @@ public class SocialMediaPlatformApplication implements CommandLineRunner {
     public static final Logger LOGGER = LoggerFactory.getLogger(SocialMediaPlatformApplication.class);
     private final UserService userService;
     private final CommentService commentService;
+    private final PostService postService;
+    private final LikeService likeService;
     
     @Autowired
-    public SocialMediaPlatformApplication(UserService userService, CommentService commentService) {
+    public SocialMediaPlatformApplication(UserService userService, 
+                                          CommentService commentService,
+                                          PostService postService,
+                                          LikeService likeService) {
         this.userService = userService;
         this.commentService = commentService;
+        this.postService = postService;
+        this.likeService = likeService;
     }
 
     public static void main(String[] args) {
@@ -32,33 +43,26 @@ public class SocialMediaPlatformApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-//        User user = new User();
-//        user.setUsername("max12345");
-//        user.setFirstName("Max");
-//        user.setLastName("Jackson");
-//        user.setEmail("max_jackson@mail.com");
-//        
-//        userService.save(user);
-//        
-//        LOGGER.info("\nUser after save: {}", user.toString());
-//        
-//        UUID id = user.getId();
-//        User persistedUser = userService.findById(id);
-//        LOGGER.info("\nRetrieved User: {}", persistedUser.toString());
-//        
-//        Comment comment = new Comment(user, "My comment", LocalDateTime.now());
-//        commentService.save(comment);
-//        
-//        LOGGER.info("\nComment after save: {}", comment.toString());
-//        
-//        User userWithComments = userService.findById(id);
-//        LOGGER.info("\nRetrieved User with comments: {}", userWithComments.toString());
         
-        Comment comment = commentService.findById(UUID.fromString("571ab2c6-c296-4522-98c3-2ca26c43e2d6"));
-        LOGGER.info("\nRetrieved Comment: {}", comment.toString());
+        User user = User.builder().username("max12345").firstName("Max").lastName("Mayers").email("max_mayers@mail.com").build();
+        userService.create(user);
         
-        User persistedUser = userService.findById(UUID.fromString("9968dc82-8dbd-42a0-b144-2a64d3925071"));
-        LOGGER.info("\nRetrieved User: {}", persistedUser.toString());
+        User commentedUser = User.builder().username("jack1234").firstName("Jack").lastName("Johnson").email("jack_johnson@mail.com").build();
+        userService.create(commentedUser);
+        
+        User likedUser = User.builder().username("rob1234").firstName("Rob").lastName("Robinson").email("rob_robinson@mail.com").build();
+        userService.create(likedUser);
+        
+        Post post = Post.builder().content("My new post").user(user).createdAt(LocalDateTime.now()).build();
+        postService.create(post);
+        
+        Comment comment = Comment.builder().content("My new comment").user(commentedUser).post(post).createdAt(LocalDateTime.now()).build();
+        commentService.create(comment);
+        
+        Like postLike = Like.builder().post(post).user(likedUser).createdAt(LocalDateTime.now()).build();
+        Like commentLike = Like.builder().comment(comment).user(user).createdAt(LocalDateTime.now()).build();
+        likeService.save(postLike);
+        likeService.save(commentLike);
     }
 
 }
